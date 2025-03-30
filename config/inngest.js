@@ -11,12 +11,14 @@ export const syncUserCreation = inngest.createFunction(
   },
   { event: "clerk/user.created" },
   async ({ event }) => {
-    const { id, first_name, last_name, email_addresses, url } = event.data;
+    const { id, first_name, last_name, email_addresses, image_url } =
+      event.data;
+    console.log("Incoming event data:", JSON.stringify(event.data, null, 2));
     const userData = {
       _id: id,
       email: email_addresses[0].email_address,
       name: first_name + " " + last_name,
-      imageUrl,
+      imageUrl: image_url,
     };
     await connectDB();
     await User.create(userData);
@@ -36,7 +38,7 @@ export const syncUserUpdation = inngest.createFunction(
       _id: id,
       email: email_addresses[0].email_address,
       name: first_name + " " + last_name,
-      imageUrl,
+      imageUrl: image_url,
     };
     await connectDB();
     await User.findByIdAndUpdate(id, userData);
